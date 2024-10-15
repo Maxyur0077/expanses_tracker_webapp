@@ -1,1 +1,1 @@
-"web: bin/run" > Procfile
+web: nginx -g 'daemon off;'
