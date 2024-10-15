@@ -1,4 +1,4 @@
 export const environment = {
-    production:false,
-    apiUrl:'https://expense-tracker-t3cs.onrender.com/v1/api/',
+  production: false,
+  apiUrl: 'http://localhost:3000',
 };

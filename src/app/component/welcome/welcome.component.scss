@@ -1,22 +1,15 @@
-.example-spacer {
-    flex: 1 1 auto;
-  }
-  
-  .example-sidenav-content {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .example-sidenav {
-    padding-left: 50px;
-    padding-right: 100px;
-    padding-top: 50px;
-  }
-  .btns{
-    position: fixed;
-    bottom: 10%;
-    right: 5%;
-    z-index: 100;
-  }
+.header {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  height: 50px;
+}
+
+.title {
+  font-size: large;
+  font-weight: bold;
+}

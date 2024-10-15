@@ -1,63 +1,119 @@
-<div id="container" class="container">
-  <!-- FORM SECTION -->
+<div
+  id="container"
+  class="container"
+  [ngClass]="{ 'sign-in': isSignIn, 'sign-up': !isSignIn }"
+>
   <div class="row">
     <!-- SIGN UP -->
     <div class="col align-items-center flex-col sign-up">
       <div class="form-wrapper align-items-center">
-        <div class="form sign-up">
+        <form [formGroup]="signUpForm" class="form sign-up">
           <div class="input-group">
             <i class="bx bxs-user"></i>
-            <input type="text" placeholder="Username" />
+            <input
+              type="text"
+              class="input"
+              placeholder="name"
+              formControlName="name"
+            />
+          </div>
+
+          <div class="input-group">
+            <i class="bx bxs-user"></i>
+            <input
+              type="text"
+              class="input"
+              placeholder="Username"
+              formControlName="username"
+            />
           </div>
           <div class="input-group">
             <i class="bx bx-mail-send"></i>
-            <input type="email" placeholder="Email" />
+            <input
+              type="email"
+              class="input"
+              placeholder="Email"
+              formControlName="gmail"
+            />
           </div>
           <div class="input-group">
             <i class="bx bxs-lock-alt"></i>
-            <input type="password" placeholder="Password" />
+            <input
+              type="password"
+              class="input"
+              placeholder="Password"
+              formControlName="password"
+            />
           </div>
           <div class="input-group">
             <i class="bx bxs-lock-alt"></i>
-            <input type="password" placeholder="Confirm password" />
+            <input
+              type="password"
+              class="input"
+              placeholder="Confirm password"
+              formControlName="confirmPassword"
+            />
           </div>
-          <button>Sign up</button>
+          <button
+            type="button"
+            class="signInButton"
+            [disabled]="SignUpContinue"
+            (click)="signUp()"
+          >
+            Sign up
+          </button>
           <p>
-            <span> Already have an account? </span>
-            <b onclick="toggle()" class="pointer"> Sign in here </b>
+            <span>Already have an account?</span>
+            <b (click)="toggle()" class="pointer">Sign in here</b>
           </p>
-        </div>
+        </form>
       </div>
     </div>
     <!-- END SIGN UP -->
+
     <!-- SIGN IN -->
     <div class="col align-items-center flex-col sign-in">
       <div class="form-wrapper align-items-center">
-        <div class="form sign-in">
+        <form [formGroup]="loginForm" class="form sign-in">
           <div class="input-group">
             <i class="bx bxs-user"></i>
-            <input type="text" placeholder="Username" />
+            <input
+              type="email"
+              placeholder="Email"
+              class="input"
+              formControlName="gmail"
+            />
           </div>
           <div class="input-group">
             <i class="bx bxs-lock-alt"></i>
-            <input type="password" placeholder="Password" />
+            <input
+              type="password"
+              placeholder="Password"
+              class="input"
+              formControlName="password"
+            />
           </div>
-          <button>Sign in</button>
+          <button
+            type="button"
+            class="signInButton"
+            [disabled]="LoginContinue"
+            (click)="signIn()"
+          >
+            Sign in
+          </button>
           <p>
-            <b> Forgot password? </b>
+            <b>Forgot password?</b>
           </p>
           <p>
-            <span> Don't have an account? </span>
-            <b onclick="toggle()" class="pointer"> Sign up here </b>
+            <span>Don't have an account?</span>
+            <b (click)="toggle()" class="pointer">Sign up here</b>
           </p>
-        </div>
+        </form>
       </div>
-      <div class="form-wrapper"></div>
     </div>
     <!-- END SIGN IN -->
   </div>
-  <!-- END FORM SECTION -->
-  <!-- CONTENT SECTION -->
+
   <div class="row content-row">
     <!-- SIGN IN CONTENT -->
     <div class="col align-items-center flex-col">
@@ -67,14 +123,13 @@
       <div class="img sign-in"></div>
     </div>
     <!-- END SIGN IN CONTENT -->
+
     <!-- SIGN UP CONTENT -->
     <div class="col align-items-center flex-col">
       <div class="img sign-up"></div>
       <div class="text sign-up">
-        <h2>Join with us</h2>
+        <h2>Track Your Money</h2>
       </div>
     </div>
-    <!-- END SIGN UP CONTENT -->
   </div>
-  <!-- END CONTENT SECTION -->
 </div>

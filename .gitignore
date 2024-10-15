@@ -1,7 +1,5 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
 # Compiled output
-/dist
+# /dist               <-- Comment out or remove this line
 /tmp
 /out-tsc
 /bazel-out
