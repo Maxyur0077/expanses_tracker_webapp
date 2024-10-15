@@ -1,1 +1,1 @@
-echo "web: bin/run" > Procfile
+"web: bin/run" > Procfile
