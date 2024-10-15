@@ -16,7 +16,9 @@ export class AuthService {
     public http: HttpClient,
     public _snackBar: MatSnackBar,
     public route: Router
-  ) {}
+  ) {
+    console.log(this.apiUrl, 'Url is here');
+  }
 
   authAfterReferesh(isAuth: boolean, token: any) {
     this.isAuth = isAuth;
