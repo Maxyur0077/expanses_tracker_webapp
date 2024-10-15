@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
           this.showSnackBar('Account created successfully!', 'success');
         })
         .catch(() => {
+          console.log('here');
           this.showSnackBar('Sign-up failed. Please try again.', 'error');
         })
         .finally(() => {
