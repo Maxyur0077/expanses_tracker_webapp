@@ -52,7 +52,7 @@ export class BusinessDataService {
 
   onImportExpense(values: any) {
     let id = sessionStorage.getItem('Id')?.split(' ')[1];
-    let date = values.expense_date.split('/');
+    let date = values.expense_date.split('-');
     date = new Date(date[2], date[1] - 1, date[0]).toString();
     date = date.split(' ');
     let body = {

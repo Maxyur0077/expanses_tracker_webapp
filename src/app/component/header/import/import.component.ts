@@ -146,11 +146,11 @@ export class ImportComponent implements OnInit {
         });
         return;
       }
-      if (hashamp['expense_date'].split('/')[2].length != 4) {
+      if (hashamp['expense_date'].split('-')[2].length != 4) {
         this.snackBar.open('Date Format DD/MM/YYYY', '', { duration: 2000 });
         return;
       }
-      if (parseInt(hashamp['expense_date'].split('/')[1]) > 12) {
+      if (parseInt(hashamp['expense_date'].split('-')[1]) > 12) {
         this.snackBar.open('Date Format DD/MM/YYYY', '', { duration: 2000 });
         return;
       }
@@ -169,6 +169,7 @@ export class ImportComponent implements OnInit {
   }
 
   onSaveExpense(body: any) {
+    console.log(body);
     this.businessData.onImportExpense(body).subscribe(
       (res: any) => {
         if (res.status === true) {
