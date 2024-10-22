@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -14,16 +19,19 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   signUpForm!: FormGroup;
   isSignIn = true;
-  LoginContinue = false; // Re-added for template binding
-  SignUpContinue = false; // Re-added for template binding
-  isPasswordVisible = false;
-  isConfirmPasswordVisible = false;
+  LoginContinue = false;
+  SignUpContinue = false;
+  showPassword = false;
+  showConfirmPassword = false;
+  showLoginPassword = false;
+  signInButton = false;
 
   constructor(
-    private route: Router,
+    private router: Router,
     private authService: AuthService,
     private busServ: BusinessDataService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -31,29 +39,58 @@ export class LoginComponent implements OnInit {
   }
 
   private initializeForms(): void {
-    this.loginForm = new FormGroup({
-      gmail: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', Validators.required),
-    });
+    this.signUpForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        username: ['', Validators.required],
+        gmail: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
 
-    this.signUpForm = new FormGroup({
-      name: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z ]*$'),
-      ]),
-      username: new FormControl('', Validators.required),
-      gmail: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(8),
-      ]),
-      confirmPassword: new FormControl('', Validators.required),
+    this.loginForm = this.fb.group({
+      gmail: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
+  }
+
+  showValidationSummary(): any {
+    return (
+      (this.signUpForm.get('name')?.invalid &&
+        this.signUpForm.get('name')?.touched) ||
+      (this.signUpForm.get('username')?.invalid &&
+        this.signUpForm.get('username')?.touched) ||
+      (this.signUpForm.get('gmail')?.invalid &&
+        this.signUpForm.get('gmail')?.touched) ||
+      (this.signUpForm.get('password')?.invalid &&
+        this.signUpForm.get('password')?.touched) ||
+      (this.signUpForm.hasError('passwordMismatch') &&
+        this.signUpForm.get('confirmPassword')?.touched)
+    );
+  }
+
+  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   toggle(): void {
     this.isSignIn = !this.isSignIn;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  toggleLoginPasswordVisibility(): void {
+    this.showLoginPassword = !this.showLoginPassword;
   }
 
   signIn(): void {
@@ -62,11 +99,10 @@ export class LoginComponent implements OnInit {
       this.authService
         .onLogin(this.loginForm.value)
         .then(() => {
-          this.busServ.isChecking = false;
           this.showSnackBar('Login successful!', 'success');
+          this.router.navigate(['/dashboard']); // Redirect to dashboard or any other page
         })
         .catch(() => {
-          this.busServ.isChecking = false;
           this.showSnackBar('Login failed. Please try again.', 'error');
         })
         .finally(() => {
@@ -78,30 +114,28 @@ export class LoginComponent implements OnInit {
   }
 
   signUp(): void {
+    this.signInButton = true;
+
     if (this.signUpForm.valid) {
       this.SignUpContinue = true;
       this.authService
         .onSignUp(this.signUpForm.value)
         .then(() => {
           this.showSnackBar('Account created successfully!', 'success');
+          this.router.navigate(['/dashboard']); // Redirect to dashboard or any other page
         })
-        .catch(() => {
-          console.log('here');
-          this.showSnackBar('Sign-up failed. Please try again.', 'error');
+        .catch((error) => {
+          this.showSnackBar('Login failed. Please try again.', 'error');
         })
         .finally(() => {
           this.SignUpContinue = false;
         });
     } else {
-      this.showSnackBar('Please fill out the form correctly.', 'error');
-    }
-  }
-
-  togglePasswordVisibility(type: 'password' | 'confirmPassword'): void {
-    if (type === 'password') {
-      this.isPasswordVisible = !this.isPasswordVisible;
-    } else if (type === 'confirmPassword') {
-      this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+      if (this.signUpForm.hasError('passwordMismatch')) {
+        this.showSnackBar('Passwords do not match. Please try again.', 'error');
+      } else {
+        this.showSnackBar('Please fill out the form correctly.', 'error');
+      }
     }
   }
 

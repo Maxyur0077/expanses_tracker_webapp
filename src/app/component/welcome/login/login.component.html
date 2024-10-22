@@ -3,8 +3,44 @@
   class="container"
   [ngClass]="{ 'sign-in': isSignIn, 'sign-up': !isSignIn }"
 >
+  <div
+    class="validation-summary dialog-1"
+    *ngIf="showValidationSummary() && signInButton"
+  >
+    <p *ngIf="signUpForm.get('name')?.invalid">
+      <i class="bx bxs-error-circle icon-error"></i>
+      Name is required.
+    </p>
+    <p *ngIf="signUpForm.get('username')?.invalid">
+      <i class="bx bxs-error-circle icon-error"></i>
+      Username is required.
+    </p>
+    <p *ngIf="signUpForm.get('gmail')?.invalid">
+      <i class="bx bxs-error-circle icon-error"></i>
+      <span *ngIf="signUpForm.get('gmail')?.errors?.['required']"
+        >Email is required.</span
+      >
+      <span *ngIf="signUpForm.get('gmail')?.errors?.['email']"
+        >Please enter a valid email address.</span
+      >
+    </p>
+    <p *ngIf="signUpForm.get('password')?.invalid">
+      <i class="bx bxs-error-circle icon-error"></i>
+      <span *ngIf="signUpForm.get('password')?.errors?.['required']"
+        >Password is required.</span
+      >
+      <span *ngIf="signUpForm.get('password')?.errors?.['minlength']"
+        >Password must be at least 8 characters long.</span
+      >
+    </p>
+
+    <p *ngIf="signUpForm.hasError('passwordMismatch')">
+      <i class="bx bxs-error-circle icon-error"></i>
+      Passwords do not match.
+    </p>
+  </div>
+
   <div class="row">
-    <!-- SIGN UP -->
     <div class="col align-items-center flex-col sign-up">
       <div class="form-wrapper align-items-center">
         <form [formGroup]="signUpForm" class="form sign-up">
@@ -15,9 +51,15 @@
               class="input"
               placeholder="name"
               formControlName="name"
+              [ngClass]="{
+                'invalid-field':
+                  signUpForm.get('name')?.invalid &&
+                  signUpForm.get('name')?.touched
+              }"
             />
           </div>
 
+          <!-- Username Field -->
           <div class="input-group">
             <i class="bx bxs-user"></i>
             <input
@@ -25,8 +67,15 @@
               class="input"
               placeholder="Username"
               formControlName="username"
+              [ngClass]="{
+                'invalid-field':
+                  signUpForm.get('username')?.invalid &&
+                  signUpForm.get('username')?.touched
+              }"
             />
           </div>
+
+          <!-- Email Field -->
           <div class="input-group">
             <i class="bx bx-mail-send"></i>
             <input
@@ -34,26 +83,54 @@
               class="input"
               placeholder="Email"
               formControlName="gmail"
+              [ngClass]="{
+                'invalid-field':
+                  signUpForm.get('gmail')?.invalid &&
+                  signUpForm.get('gmail')?.touched
+              }"
             />
           </div>
+
+          <!-- Password Field -->
           <div class="input-group">
-            <i class="bx bxs-lock-alt"></i>
+            <i
+              class="bx"
+              [ngClass]="showPassword ? 'bx-show' : 'bx-hide'"
+              (click)="togglePasswordVisibility()"
+            ></i>
             <input
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
               class="input"
               placeholder="Password"
               formControlName="password"
+              [ngClass]="{
+                'invalid-field':
+                  signUpForm.get('password')?.invalid &&
+                  signUpForm.get('password')?.touched
+              }"
             />
           </div>
+
+          <!-- Confirm Password Field -->
           <div class="input-group">
-            <i class="bx bxs-lock-alt"></i>
+            <i
+              class="bx"
+              [ngClass]="showConfirmPassword ? 'bx-show' : 'bx-hide'"
+              (click)="toggleConfirmPasswordVisibility()"
+            ></i>
             <input
-              type="password"
+              [type]="showConfirmPassword ? 'text' : 'password'"
               class="input"
               placeholder="Confirm password"
               formControlName="confirmPassword"
+              [ngClass]="{
+                'invalid-field':
+                  signUpForm.get('confirmPassword')?.invalid &&
+                  signUpForm.get('confirmPassword')?.touched
+              }"
             />
           </div>
+
           <button
             type="button"
             class="signInButton"
@@ -85,14 +162,19 @@
             />
           </div>
           <div class="input-group">
-            <i class="bx bxs-lock-alt"></i>
+            <i
+              class="bx"
+              [ngClass]="showLoginPassword ? 'bx-show' : 'bx-hide'"
+              (click)="toggleLoginPasswordVisibility()"
+            ></i>
             <input
-              type="password"
-              placeholder="Password"
+              [type]="showLoginPassword ? 'text' : 'password'"
               class="input"
+              placeholder="Password"
               formControlName="password"
             />
           </div>
+
           <button
             type="button"
             class="signInButton"
